@@ -1,0 +1,35 @@
+{
+    "name": "philiprehberger/php-mask",
+    "description": "Mask sensitive data in strings, arrays, and objects for safe logging",
+    "keywords": ["mask", "redact", "sanitize", "logging", "privacy", "sensitive"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Philip Rehberger",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "phpstan/phpstan": "^1.12|^2.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhilipRehberger\\Mask\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhilipRehberger\\Mask\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
