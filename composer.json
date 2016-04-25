@@ -1,7 +1,9 @@
 {
     "name": "philiprehberger/php-mask",
     "description": "Mask sensitive data in strings, arrays, and objects for safe logging",
+    "type": "library",
     "keywords": ["mask", "redact", "sanitize", "logging", "privacy", "sensitive"],
+    "homepage": "https://github.com/philiprehberger/php-mask",
     "license": "MIT",
     "authors": [
         {
@@ -29,6 +31,11 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "lint": "vendor/bin/pint",
+        "analyse": "vendor/bin/phpstan analyse"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
