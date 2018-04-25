@@ -56,6 +56,26 @@ Mask::ip('192.168.1.100');
 // "192.168.*.*"
 ```
 
+### IBAN masking
+
+```php
+Mask::iban('DE89370400440532013000');
+// "DE****************3000"
+
+Mask::iban('GB29NWBK60161331926789', '#');
+// "GB################6789"
+```
+
+### Custom masking
+
+```php
+Mask::custom('SensitiveData', visibleStart: 3, visibleEnd: 3);
+// "Sen*******ata"
+
+Mask::custom('SensitiveData', visibleStart: 0, visibleEnd: 0);
+// "*************"
+```
+
 ### Generic string masking
 
 ```php
@@ -64,6 +84,23 @@ Mask::string('SensitiveData');
 
 Mask::string('SensitiveData', visibleStart: 3, visibleEnd: 3);
 // "Sen*******ata"
+```
+
+### Recursive array masking with dot notation
+
+```php
+$data = [
+    'user' => [
+        'name' => 'John',
+        'address' => [
+            'street' => '123 Main St',
+        ],
+    ],
+    'password' => 'secret123',
+];
+
+Mask::arrayRecursive($data, ['password', 'user.address.street']);
+// ['user' => ['name' => 'John', 'address' => ['street' => '12*******St']], 'password' => 'se*****23']
 ```
 
 ### Array masking (deep)
@@ -116,7 +153,10 @@ Mask::string('SensitiveData');
 | `Mask::phone(string $phone): string` | Mask a phone number, preserving country code and last 4 digits |
 | `Mask::creditCard(string $number): string` | Mask a credit card, showing first 4 and last 4 digits |
 | `Mask::ip(string $ip): string` | Mask an IP address, showing first two octets (v4) or groups (v6) |
+| `Mask::iban(string $value, string $char = '*'): string` | Mask an IBAN, showing country code and last 4 characters |
+| `Mask::custom(string $value, int $visibleStart, int $visibleEnd, string $char = '*'): string` | Mask a string with configurable visible start/end lengths |
 | `Mask::string(string $value, int $visibleStart = 2, int $visibleEnd = 2): string` | Mask a generic string with configurable visible characters |
+| `Mask::arrayRecursive(array $data, array $keys, string $char = '*'): array` | Recursively mask values at specified keys, supporting dot notation paths |
 | `Mask::array(array $data, array $keys): array` | Deep-mask specified keys in an associative array |
 | `Mask::json(string $json, array $keys): string` | Parse JSON, mask specified keys, re-encode |
 | `Mask::configure(MaskConfig $config): void` | Set global masking configuration |
