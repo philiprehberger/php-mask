@@ -9,9 +9,7 @@ Mask sensitive data in strings, arrays, and objects for safe logging.
 
 ## Requirements
 
-| Dependency | Version |
-|------------|---------|
-| PHP        | ^8.2    |
+- PHP 8.2+
 
 
 ## Installation
