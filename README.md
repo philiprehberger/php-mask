@@ -68,6 +68,23 @@ Mask::custom('SensitiveData', visibleStart: 0, visibleEnd: 0);
 // "*************"
 ```
 
+### URL masking
+
+```php
+Mask::url('https://user:pass@example.com/path?token=abc123&key=secret');
+// "https://u***:p***@example.com/path?token=a*****&key=s*****"
+
+Mask::url('https://example.com/search?q=test');
+// "https://example.com/search?q=t***"
+```
+
+### JWT masking
+
+```php
+Mask::jwt('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpM');
+// "eyJhbGciOiJIUzI1NiJ9.[MASKED].[MASKED]"
+```
+
 ### Generic string masking
 
 ```php
@@ -119,6 +136,28 @@ Mask::json($json, ['ssn']);
 // '{"name":"John","ssn":"12*******89"}'
 ```
 
+### Redaction policies
+
+```php
+use PhilipRehberger\Mask\RedactionPolicy;
+
+$policy = RedactionPolicy::create()
+    ->maskField('user.email', 'email')
+    ->maskField('*.secret', 'full')
+    ->maskPattern('/password|token/i', 'full');
+
+$data = [
+    'user' => ['name' => 'John', 'email' => 'john@example.com'],
+    'service' => ['secret' => 'sk-12345'],
+    'password' => 'hunter2',
+];
+
+$result = $policy->apply($data);
+// ['user' => ['name' => 'John', 'email' => 'j***@e******.com'],
+//  'service' => ['secret' => '********'],
+//  'password' => '*******']
+```
+
 ### Custom configuration
 
 ```php
@@ -145,12 +184,19 @@ Mask::string('SensitiveData');
 | `Mask::ip(string $ip): string` | Mask an IP address, showing first two octets (v4) or groups (v6) |
 | `Mask::iban(string $value, string $char = '*'): string` | Mask an IBAN, showing country code and last 4 characters |
 | `Mask::custom(string $value, int $visibleStart, int $visibleEnd, string $char = '*'): string` | Mask a string with configurable visible start/end lengths |
+| `Mask::url(string $url): string` | Mask URL query parameter values and embedded credentials |
+| `Mask::jwt(string $token): string` | Mask JWT payload and signature, preserving header |
 | `Mask::string(string $value, int $visibleStart = 2, int $visibleEnd = 2): string` | Mask a generic string with configurable visible characters |
 | `Mask::arrayRecursive(array $data, array $keys, string $char = '*'): array` | Recursively mask values at specified keys, supporting dot notation paths |
 | `Mask::array(array $data, array $keys): array` | Deep-mask specified keys in an associative array |
 | `Mask::json(string $json, array $keys): string` | Parse JSON, mask specified keys, re-encode |
 | `Mask::configure(MaskConfig $config): void` | Set global masking configuration |
 | `Mask::resetConfig(): void` | Reset configuration to defaults |
+| `RedactionPolicy::create(): self` | Create a new redaction policy |
+| `RedactionPolicy::maskField(string $path, string $method): self` | Register a masking rule for a field path (dot notation, wildcards) |
+| `RedactionPolicy::maskPattern(string $regex, string $method): self` | Register a pattern-based rule matched against field names |
+| `RedactionPolicy::apply(array $data): array` | Apply all rules to an array, returning masked copy |
+| `RedactionPolicy::merge(self $other): self` | Merge another policy into this one |
 
 ## Development
 

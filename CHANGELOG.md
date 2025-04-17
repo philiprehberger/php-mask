@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-03-31
+
+### Added
+- URL masking via `Mask::url()` with query parameter and credential masking
+- JWT masking via `Mask::jwt()` preserving header for debugging
+- Declarative `RedactionPolicy` for defining reusable masking rules with field paths, patterns, and wildcards
+
 ## [1.1.3] - 2026-03-31
 
 ### Changed
