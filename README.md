@@ -2,7 +2,6 @@
 
 [![Tests](https://github.com/philiprehberger/php-mask/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/php-mask/actions/workflows/tests.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/php-mask.svg)](https://packagist.org/packages/philiprehberger/php-mask)
-[![Total Downloads](https://img.shields.io/packagist/dt/philiprehberger/php-mask.svg)](https://packagist.org/packages/philiprehberger/php-mask)
 [![PHP Version Require](https://img.shields.io/packagist/php-v/philiprehberger/php-mask.svg)](https://packagist.org/packages/philiprehberger/php-mask)
 [![License](https://img.shields.io/github/license/philiprehberger/php-mask)](LICENSE)
 
