@@ -6,7 +6,6 @@
 
 Mask sensitive data in strings, arrays, and objects for safe logging.
 
----
 
 ## Requirements
 
@@ -14,7 +13,6 @@ Mask sensitive data in strings, arrays, and objects for safe logging.
 |------------|---------|
 | PHP        | ^8.2    |
 
----
 
 ## Installation
 
@@ -22,7 +20,6 @@ Mask sensitive data in strings, arrays, and objects for safe logging.
 composer require philiprehberger/php-mask
 ```
 
----
 
 ## Usage
 
@@ -143,7 +140,6 @@ Mask::string('SensitiveData');
 // "Sen###ata"
 ```
 
----
 
 ## API
 
@@ -162,7 +158,6 @@ Mask::string('SensitiveData');
 | `Mask::configure(MaskConfig $config): void` | Set global masking configuration |
 | `Mask::resetConfig(): void` | Reset configuration to defaults |
 
----
 
 ## Development
 
