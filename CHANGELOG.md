@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-03-22
+
+### Added
+- `iban()` method for IBAN masking (shows country code and last 4 digits)
+- `custom()` method for flexible masking with configurable visible start/end lengths
+- `arrayRecursive()` method for masking values in nested arrays using dot notation paths
+
 ## [1.0.3] - 2026-03-17
 
 ### Changed

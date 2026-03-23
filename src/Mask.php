@@ -200,6 +200,133 @@ class Mask
     }
 
     /**
+     * Mask an IBAN, showing country code (first 2 chars) and last 4 characters.
+     *
+     * Example: "DE89370400440532013000" becomes "DE**************3000"
+     */
+    public static function iban(string $value, string $char = '*'): string
+    {
+        if ($value === '') {
+            return '';
+        }
+
+        $length = mb_strlen($value);
+
+        if ($length <= 6) {
+            return mb_substr($value, 0, 2).str_repeat($char, $length - 2);
+        }
+
+        $country = mb_substr($value, 0, 2);
+        $last4 = mb_substr($value, -4);
+        $middleLength = $length - 2 - 4;
+
+        return $country.str_repeat($char, $middleLength).$last4;
+    }
+
+    /**
+     * Mask a string with configurable visible start and end character counts.
+     *
+     * Example: "SensitiveData" with custom(value, 3, 3) becomes "Sen*******ata"
+     */
+    public static function custom(string $value, int $visibleStart, int $visibleEnd, string $char = '*'): string
+    {
+        $length = mb_strlen($value);
+
+        if ($length === 0) {
+            return '';
+        }
+
+        if ($length <= $visibleStart + $visibleEnd) {
+            return str_repeat($char, $length);
+        }
+
+        $start = mb_substr($value, 0, $visibleStart);
+        $end = $visibleEnd > 0 ? mb_substr($value, -$visibleEnd) : '';
+        $middleLength = $length - $visibleStart - $visibleEnd;
+
+        return $start.str_repeat($char, $middleLength).$end;
+    }
+
+    /**
+     * Recursively mask values at specified keys in nested arrays, supporting dot notation paths.
+     *
+     * @param  array<string, mixed>  $data
+     * @param  array<int, string>  $keys
+     * @return array<string, mixed>
+     */
+    public static function arrayRecursive(array $data, array $keys, string $char = '*'): array
+    {
+        $simpleKeys = [];
+        $dotKeys = [];
+
+        foreach ($keys as $key) {
+            if (str_contains($key, '.')) {
+                $dotKeys[] = $key;
+            } else {
+                $simpleKeys[] = $key;
+            }
+        }
+
+        $data = self::maskArrayRecursiveSimple($data, $simpleKeys, $char);
+
+        foreach ($dotKeys as $dotKey) {
+            $data = self::maskDotPath($data, explode('.', $dotKey), $char);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Recursively mask simple (non-dot) keys in an array.
+     *
+     * @param  array<string, mixed>  $data
+     * @param  array<int, string>  $keys
+     * @return array<string, mixed>
+     */
+    private static function maskArrayRecursiveSimple(array $data, array $keys, string $char): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = self::maskArrayRecursiveSimple($value, $keys, $char);
+            } elseif (in_array($key, $keys, true) && is_string($value)) {
+                $data[$key] = self::custom($value, 2, 2, $char);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Mask a value at a specific dot-notation path in a nested array.
+     *
+     * @param  array<string, mixed>  $data
+     * @param  array<int, string>  $segments
+     * @return array<string, mixed>
+     */
+    private static function maskDotPath(array $data, array $segments, string $char): array
+    {
+        $current = array_shift($segments);
+
+        if ($current === null || ! array_key_exists($current, $data)) {
+            return $data;
+        }
+
+        if (count($segments) === 0) {
+            if (is_string($data[$current])) {
+                $data[$current] = self::custom($data[$current], 2, 2, $char);
+            }
+
+            return $data;
+        }
+
+        if (is_array($data[$current])) {
+            $data[$current] = self::maskDotPath($data[$current], $segments, $char);
+        }
+
+        return $data;
+    }
+
+    /**
      * Mask a generic string with configurable visible start and end characters.
      *
      * Example: "SensitiveData" with defaults becomes "Se*********ta"

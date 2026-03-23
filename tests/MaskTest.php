@@ -197,4 +197,140 @@ class MaskTest extends TestCase
         $this->assertSame('Se***ta', $result);
         $this->assertSame(7, mb_strlen($result));
     }
+
+    public function test_iban_masking_german_format(): void
+    {
+        $this->assertSame('DE****************3000', Mask::iban('DE89370400440532013000'));
+    }
+
+    public function test_iban_masking_british_format(): void
+    {
+        $this->assertSame('GB****************6789', Mask::iban('GB29NWBK60161331926789'));
+    }
+
+    public function test_iban_masking_french_format(): void
+    {
+        $this->assertSame('FR************************5000', Mask::iban('FR7630006000011234567890185000'));
+    }
+
+    public function test_iban_masking_empty_string(): void
+    {
+        $this->assertSame('', Mask::iban(''));
+    }
+
+    public function test_iban_masking_short_value(): void
+    {
+        $this->assertSame('DE****', Mask::iban('DE1234'));
+    }
+
+    public function test_iban_masking_custom_char(): void
+    {
+        $this->assertSame('DE################3000', Mask::iban('DE89370400440532013000', '#'));
+    }
+
+    public function test_custom_masking_standard(): void
+    {
+        $this->assertSame('Sen*******ata', Mask::custom('SensitiveData', 3, 3));
+    }
+
+    public function test_custom_masking_zero_visible_start(): void
+    {
+        $this->assertSame('**********ata', Mask::custom('SensitiveData', 0, 3));
+    }
+
+    public function test_custom_masking_zero_visible_end(): void
+    {
+        $this->assertSame('Sen**********', Mask::custom('SensitiveData', 3, 0));
+    }
+
+    public function test_custom_masking_zero_both(): void
+    {
+        $this->assertSame('*************', Mask::custom('SensitiveData', 0, 0));
+    }
+
+    public function test_custom_masking_short_string(): void
+    {
+        $this->assertSame('***', Mask::custom('Hi!', 3, 3));
+    }
+
+    public function test_custom_masking_empty_string(): void
+    {
+        $this->assertSame('', Mask::custom('', 3, 3));
+    }
+
+    public function test_custom_masking_custom_char(): void
+    {
+        $this->assertSame('Se#########ta', Mask::custom('SensitiveData', 2, 2, '#'));
+    }
+
+    public function test_array_recursive_with_simple_keys(): void
+    {
+        $data = [
+            'name' => 'John',
+            'email' => 'john@example.com',
+            'nested' => [
+                'secret' => 'abc123',
+            ],
+        ];
+
+        $result = Mask::arrayRecursive($data, ['email', 'secret']);
+
+        $this->assertSame('John', $result['name']);
+        $this->assertStringContainsString('*', $result['email']);
+        $this->assertStringContainsString('*', $result['nested']['secret']);
+    }
+
+    public function test_array_recursive_with_dot_notation(): void
+    {
+        $data = [
+            'user' => [
+                'name' => 'John',
+                'address' => [
+                    'street' => '123 Main St',
+                ],
+            ],
+        ];
+
+        $result = Mask::arrayRecursive($data, ['user.address.street']);
+
+        $this->assertSame('John', $result['user']['name']);
+        $this->assertStringContainsString('*', $result['user']['address']['street']);
+        $this->assertStringStartsWith('12', $result['user']['address']['street']);
+        $this->assertStringEndsWith('St', $result['user']['address']['street']);
+    }
+
+    public function test_array_recursive_with_mixed_keys(): void
+    {
+        $data = [
+            'name' => 'John',
+            'password' => 'secret123',
+            'profile' => [
+                'ssn' => '123-45-6789',
+            ],
+        ];
+
+        $result = Mask::arrayRecursive($data, ['password', 'profile.ssn']);
+
+        $this->assertSame('John', $result['name']);
+        $this->assertStringContainsString('*', $result['password']);
+        $this->assertStringContainsString('*', $result['profile']['ssn']);
+    }
+
+    public function test_array_recursive_with_custom_char(): void
+    {
+        $data = ['secret' => 'hidden'];
+
+        $result = Mask::arrayRecursive($data, ['secret'], '#');
+
+        $this->assertSame('hi##en', $result['secret']);
+    }
+
+    public function test_array_recursive_missing_dot_path_unchanged(): void
+    {
+        $data = ['name' => 'John'];
+
+        $result = Mask::arrayRecursive($data, ['missing.path.here']);
+
+        $this->assertSame('John', $result['name']);
+    }
 }
