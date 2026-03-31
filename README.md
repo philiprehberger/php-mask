@@ -2,23 +2,19 @@
 
 [![Tests](https://github.com/philiprehberger/php-mask/actions/workflows/tests.yml/badge.svg)](https://github.com/philiprehberger/php-mask/actions/workflows/tests.yml)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/philiprehberger/php-mask.svg)](https://packagist.org/packages/philiprehberger/php-mask)
-[![License](https://img.shields.io/github/license/philiprehberger/php-mask)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
+[![Last updated](https://img.shields.io/github/last-commit/philiprehberger/php-mask)](https://github.com/philiprehberger/php-mask/commits/main)
 
 Mask sensitive data in strings, arrays, and objects for safe logging.
-
 
 ## Requirements
 
 - PHP 8.2+
-
 
 ## Installation
 
 ```bash
 composer require philiprehberger/php-mask
 ```
-
 
 ## Usage
 
@@ -139,7 +135,6 @@ Mask::string('SensitiveData');
 // "Sen###ata"
 ```
 
-
 ## API
 
 | Method | Description |
@@ -157,7 +152,6 @@ Mask::string('SensitiveData');
 | `Mask::configure(MaskConfig $config): void` | Set global masking configuration |
 | `Mask::resetConfig(): void` | Reset configuration to defaults |
 
-
 ## Development
 
 ```bash
@@ -167,6 +161,24 @@ vendor/bin/pint --test
 vendor/bin/phpstan analyse
 ```
 
+## Support
+
+If you find this project useful:
+
+⭐ [Star the repo](https://github.com/philiprehberger/php-mask)
+
+🐛 [Report issues](https://github.com/philiprehberger/php-mask/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
+💡 [Suggest features](https://github.com/philiprehberger/php-mask/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+
+❤️ [Sponsor development](https://github.com/sponsors/philiprehberger)
+
+🌐 [All Open Source Projects](https://philiprehberger.com/open-source-packages)
+
+💻 [GitHub Profile](https://github.com/philiprehberger)
+
+🔗 [LinkedIn Profile](https://www.linkedin.com/in/philiprehberger)
+
 ## License
 
-MIT
+[MIT](LICENSE)
