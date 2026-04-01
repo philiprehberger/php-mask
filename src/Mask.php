@@ -6,6 +6,7 @@ namespace PhilipRehberger\Mask;
 
 use PhilipRehberger\Mask\Concerns\MasksArrays;
 use PhilipRehberger\Mask\Concerns\MasksStrings;
+use PhilipRehberger\Mask\Concerns\MasksUrls;
 
 /**
  * Static API for masking sensitive data in strings, arrays, and JSON.
@@ -14,6 +15,7 @@ class Mask
 {
     use MasksArrays;
     use MasksStrings;
+    use MasksUrls;
 
     private static ?MaskConfig $config = null;
 
